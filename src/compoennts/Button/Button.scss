@@ -1,0 +1,14 @@
+$btn-font-size: 20px;
+$p-font-size: 15px;
+
+.btn {
+    font-size: $btn-font-size;
+    background-color: black;
+    color: white;
+    padding: 10px;
+}
+
+.paragraph {
+    font-size: $p-font-size;
+    color: rebeccapurple;
+}
