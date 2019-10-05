@@ -1,5 +1,8 @@
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 /*
 
@@ -9,13 +12,14 @@ path.resolve use for absolute path
 
 
 Rules 
-- It is array and it's each object have atlist 2 properties
+- It is array and it's each object have at-least 2 properties
 - Module rules teach webpack what to do if it find file which import in some js
 
 Plugins 
-- cerate new instance 
+- create new instance
 - It is used for minified things
-
+- create new html file
+- create new bundle css file
 
 */
 
@@ -23,11 +27,11 @@ Plugins
 module.exports = {
     entry: './src/index.js', // From where bundling start
     output: {
-        filename: 'bundle.js', // Name final bundle file
+        filename: 'bundle.[contenthash].js', // Name final bundle file with hash and new file so no cache issue happen
         path: path.resolve(__dirname, './dist'), // Path where final bundle file put after process (__dirname use for current dir and second arg create dist folder in current dir)
-        publicPath: 'dist/' // It is set which public path chhose for image and other imported file
+        publicPath: '' // It is set which public path chhose for image and other imported file
     },
-    mode: 'none',
+    mode: 'production',
     module: {
         rules: [
             {
@@ -36,11 +40,11 @@ module.exports = {
             }, 
             {
                 test: /\.css$/, // It is handle and teach webpack when find .css file import on any js
-                use: [ 'style-loader', 'css-loader' ] // style-loader and css-loader handle all .css
+                use: [ MiniCssExtractPlugin.loader, 'css-loader' ] // style-loader and css-loader handle all .css
             }, 
             {
                 test: /\.scss$/, // It is handle and teach webpack when find .scss file import on any js
-                use: [ 'style-loader', 'css-loader', 'sass-loader' ]
+                use: [ MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader' ]
             }, 
             {
                 test: /\.js$/, // It is handle all js accept node_modules 
@@ -56,7 +60,20 @@ module.exports = {
         ]   
     },
     plugins: [
-        new TerserPlugin()
+        // it is minified our js
+        new TerserPlugin(),
+        // it is create style.css file inside dist instead of put all css in head section
+        new MiniCssExtractPlugin({
+            filename: 'style.[contenthash].css' // create style with hash and new file so no cache issue happen
+        }),
+        // it is clean dist before create new bundles
+        // it is clear other folder as well just provide absolute path
+        // ex. cleanOnceBeforeBuildPatterns: ['**/*', path.join(process.cwd(), 'folder/**/*')],
+        new CleanWebpackPlugin(),
+        // it is create new html file every time
+        new HtmlWebpackPlugin({
+            title: "Custom Webpack Config Production" // it is change page title we can set meta as well
+        })
     ]
 
 }
