@@ -32,6 +32,14 @@ module.exports = {
         publicPath: '' // It is set which public path chhose for image and other imported file
     },
     mode: 'production',
+    // it is optimize and chunks common dependency
+    optimization: {
+        splitChunks: {
+            chunks: "all",
+            minSize: 10000, // set min size of chunk is 10kb
+            automaticNameDelimiter: "_" // use to add file vendor ex vendor_ex_ex1.js
+        }
+    },
     module: {
         rules: [
             {

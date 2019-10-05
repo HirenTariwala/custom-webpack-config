@@ -23,7 +23,7 @@ Plugins
 
 
 module.exports = {
-    entry: './src/index.js', // From where bundling start
+    entry: './src/index.js', // From where bundling start we can provide two entry point using {}(object)
     output: {
         filename: 'bundle.js', // Name final bundle file with hash and new file so no cache issue happen
         path: path.resolve(__dirname, './dist'), // Path where final bundle file put after process (__dirname use for current dir and second arg create dist folder in current dir)
